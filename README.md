@@ -62,6 +62,27 @@ scripts/slug-map.json   # 构建时生成的 中文名→slug 表
 → 拷贝到本仓 `assets/creatures/<slug>/` 后重建 JSON。
 
 
+
+## 4:3 横版母图 → 3:4 展示裁切
+
+美术可交 **4:3 横版** `art.jpg` 或 `art-4x3.jpg`。网格与详情的展示框仍是 **3:4**，用 CSS `object-fit: cover` + `object-position` 按焦点裁，不另存竖版文件。
+
+`meta.json` 例：
+
+```json
+{
+  "art": "art-4x3.jpg",
+  "aspect": "4:3",
+  "crop": { "focusX": 0.5, "focusY": 0.45, "zoom": 1.0 }
+}
+```
+
+- `art`：选用的文件名（默认先 `art.jpg` 再 `art-4x3.jpg`）
+- `aspect: "4:3"`：启用横版→竖框裁切；**竖图（如应龙现有 3:4）不要写 `aspect: "4:3"`**，不强制裁
+- `crop.focusX` / `focusY`：0–1，焦点；`zoom`：≥1 轻微放大
+
+闪卡（holo-card）应龙插画窗按 **4:3 横版 contain** 显示母图，与图鉴竖裁分流。
+
 ## 应龙 L3 序列帧（`anim/`）
 
 与 holo-card 共用投放目录：

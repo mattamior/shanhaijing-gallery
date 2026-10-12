@@ -146,6 +146,44 @@ def detect_anim(slug: str):
     return None
 
 
+
+def resolve_art(slug: str, meta: dict):
+    """Pick art file: meta.art → art.jpg → art-4x3.jpg."""
+    root = ASSETS / slug
+    names = []
+    if meta.get("art"):
+        names.append(str(meta["art"]))
+    names.extend(["art.jpg", "art-4x3.jpg"])
+    seen = set()
+    for name in names:
+        name = name.lstrip("./")
+        if name in seen:
+            continue
+        seen.add(name)
+        p = root / name
+        if p.is_file():
+            return f"assets/creatures/{slug}/{p.name}"
+    return None
+
+
+def normalize_crop(meta: dict):
+    """Return {focusX, focusY, zoom} only when aspect is 4:3 (landscape master)."""
+    aspect = str(meta.get("aspect") or "").replace(" ", "")
+    if aspect not in ("4:3", "4/3"):
+        return None, None  # vertical / unset → no forced crop
+    crop = meta.get("crop") if isinstance(meta.get("crop"), dict) else {}
+    out = {
+        "focusX": float(crop.get("focusX", 0.5)),
+        "focusY": float(crop.get("focusY", 0.45)),
+        "zoom": float(crop.get("zoom", 1.0)),
+    }
+    # clamp
+    out["focusX"] = max(0.0, min(1.0, out["focusX"]))
+    out["focusY"] = max(0.0, min(1.0, out["focusY"]))
+    out["zoom"] = max(1.0, min(3.0, out["zoom"]))
+    return "4:3", out
+
+
 def load_meta(slug: str) -> dict:
     meta_path = ASSETS / slug / "meta.json"
     if not meta_path.is_file():
@@ -190,9 +228,10 @@ def main() -> None:
     for row in rows:
         name = row["name"]
         slug = slug_map[name]
-        art_path = ASSETS / slug / "art.jpg"
-        has_art = art_path.is_file()
         meta = load_meta(slug)
+        art = resolve_art(slug, meta)
+        has_art = art is not None
+        aspect, crop = normalize_crop(meta)
 
         status = meta.get("status") or ("ready" if has_art else "pending")
         if status == "ready" and not has_art:
@@ -205,29 +244,32 @@ def main() -> None:
         blurb = meta.get("blurb") or make_blurb(row["appearance"], row["ability"])
         display_name = meta.get("name") or name
 
-        creatures.append(
-            {
-                "slug": slug,
-                "name": display_name,
-                "csvName": name,
-                "volume": volume,
-                "source": source,
-                "blurb": blurb,
-                "appearance": row["appearance"],
-                "ability": row["ability"],
-                "artKeywords": row["art_keywords"],
-                "priority": row["priority"],
-                "status": status,
-                "art": f"assets/creatures/{slug}/art.jpg" if has_art else None,
-                "anim": detect_anim(slug),
-                "holoUrl": meta.get("holoUrl")
-                or (
-                    "https://mattamior.github.io/holo-card/all-in-one/#lv=5&focus=yinglong"
-                    if slug == "yinglong" and has_art
-                    else None
-                ),
-            }
-        )
+        entry = {
+            "slug": slug,
+            "name": display_name,
+            "csvName": name,
+            "volume": volume,
+            "source": source,
+            "blurb": blurb,
+            "appearance": row["appearance"],
+            "ability": row["ability"],
+            "artKeywords": row["art_keywords"],
+            "priority": row["priority"],
+            "status": status,
+            "art": art,
+            "anim": detect_anim(slug),
+            "holoUrl": meta.get("holoUrl")
+            or (
+                "https://mattamior.github.io/holo-card/all-in-one/#lv=5&focus=yinglong"
+                if slug == "yinglong" and has_art
+                else None
+            ),
+        }
+        if aspect:
+            entry["aspect"] = aspect
+        if crop:
+            entry["crop"] = crop
+        creatures.append(entry)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     payload = {

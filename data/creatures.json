@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-12T08:15:14Z",
+  "generatedAt": "2026-10-12T08:19:07Z",
   "total": 198,
-  "ready": 1,
+  "ready": 2,
   "creatures": [
     {
       "slug": "zhizhi",
@@ -2766,10 +2766,16 @@
       "ability": "黄帝以其皮为鼓",
       "artKeywords": "苍身独足牛、雷光风雨、夔鼓",
       "priority": "高",
-      "status": "pending",
-      "art": null,
+      "status": "ready",
+      "art": "assets/creatures/kui/art-4x3.jpg",
       "anim": null,
-      "holoUrl": null
+      "holoUrl": null,
+      "aspect": "4:3",
+      "crop": {
+        "focusX": 0.5,
+        "focusY": 0.42,
+        "zoom": 1.05
+      }
     },
     {
       "slug": "yinglong",
@@ -2787,7 +2793,7 @@
       "anim": {
         "format": "sequence",
         "frames": 8,
-        "fps": 8,
+        "fps": 10,
         "urls": [
           "assets/creatures/yinglong/anim/f01.jpg",
           "assets/creatures/yinglong/anim/f02.jpg",

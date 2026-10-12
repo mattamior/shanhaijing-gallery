@@ -94,6 +94,24 @@
       });
   }
 
+
+  /** 4:3 母图 → 3:4 展示框：cover + focus；竖图不强制 */
+  function applyArtCrop(img, c) {
+    const aspect = String(c.aspect || "").replace(/\s/g, "");
+    if (aspect !== "4:3" && aspect !== "4/3") return;
+    img.classList.add("art--from-4x3");
+    const crop = c.crop || {};
+    const fx = Math.max(0, Math.min(1, Number(crop.focusX ?? 0.5)));
+    const fy = Math.max(0, Math.min(1, Number(crop.focusY ?? 0.45)));
+    const zoom = Math.max(1, Math.min(3, Number(crop.zoom ?? 1)));
+    img.style.objectFit = "cover";
+    img.style.objectPosition = `${fx * 100}% ${fy * 100}%`;
+    if (zoom > 1) {
+      img.style.transform = `scale(${zoom})`;
+      img.style.transformOrigin = `${fx * 100}% ${fy * 100}%`;
+    }
+  }
+
   function render() {
     const list = filtered();
     el.statsShown.textContent = String(list.length);
@@ -123,6 +141,7 @@
         img.src = c.art;
         img.alt = c.name;
         img.loading = "lazy";
+        applyArtCrop(img, c);
         art.appendChild(img);
       } else {
         const ph = document.createElement("div");
@@ -241,6 +260,7 @@
         const img = document.createElement("img");
         img.src = c.art;
         img.alt = c.name;
+        applyArtCrop(img, c);
         el.modalArt.appendChild(img);
         if (anim && anim.format === "sequence") startModalAnim(img, anim);
       }
