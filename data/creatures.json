@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-12T08:19:07Z",
+  "generatedAt": "2026-10-12T08:26:42Z",
   "total": 198,
-  "ready": 2,
+  "ready": 1,
   "creatures": [
     {
       "slug": "zhizhi",
@@ -2766,7 +2766,7 @@
       "ability": "黄帝以其皮为鼓",
       "artKeywords": "苍身独足牛、雷光风雨、夔鼓",
       "priority": "高",
-      "status": "ready",
+      "status": "pending",
       "art": "assets/creatures/kui/art-4x3.jpg",
       "anim": null,
       "holoUrl": null,
