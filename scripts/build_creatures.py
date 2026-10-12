@@ -79,6 +79,73 @@ def make_blurb(appearance: str, ability: str) -> str:
     return text + "。" if text and not text.endswith("。") else text
 
 
+
+def detect_anim(slug: str):
+    """Return anim manifest for assets/creatures/<slug>/anim/ or None."""
+    root = ASSETS / slug / "anim"
+    if not root.is_dir():
+        return None
+    meta_path = root / "meta.json"
+    meta = {}
+    if meta_path.is_file():
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            print(f"warn: bad anim meta {meta_path}: {e}", file=sys.stderr)
+
+    fps = int(meta.get("fps") or 8)
+    raw_frames = meta.get("frames")
+    if isinstance(raw_frames, list) and raw_frames:
+        urls = []
+        for name in raw_frames:
+            p = root / str(name)
+            if p.is_file():
+                urls.append(f"assets/creatures/{slug}/anim/{p.name}")
+        if urls:
+            return {
+                "format": "sequence",
+                "frames": len(urls),
+                "fps": fps,
+                "urls": urls,
+                "size": meta.get("size"),
+                "status": meta.get("status"),
+            }
+
+    seq = sorted(root.glob("f*.jpg"))
+    frame_n = int(raw_frames) if isinstance(raw_frames, int) else 0
+    if not frame_n and seq:
+        frame_n = len(seq)
+    if frame_n > 0 and seq:
+        return {
+            "format": "sequence",
+            "frames": frame_n,
+            "fps": fps,
+            "urls": [f"assets/creatures/{slug}/anim/f{str(i).zfill(2)}.jpg" for i in range(1, frame_n + 1)],
+            "size": meta.get("size"),
+            "status": meta.get("status"),
+        }
+
+    sheet = None
+    for name in ("sheet.webp", "sheet.png", "sheet.jpg"):
+        if (root / name).is_file():
+            sheet = f"assets/creatures/{slug}/anim/{name}"
+            break
+    if sheet and meta.get("cols") and meta.get("rows") and frame_n > 0:
+        return {
+            "format": "sheet",
+            "sheet": sheet,
+            "frames": frame_n,
+            "fps": fps,
+            "cols": meta.get("cols"),
+            "rows": meta.get("rows"),
+            "size": meta.get("size"),
+        }
+
+    if meta.get("status") == "awaiting-art":
+        return {"format": "sequence", "frames": 0, "fps": fps, "status": "awaiting-art"}
+    return None
+
+
 def load_meta(slug: str) -> dict:
     meta_path = ASSETS / slug / "meta.json"
     if not meta_path.is_file():
@@ -152,6 +219,7 @@ def main() -> None:
                 "priority": row["priority"],
                 "status": status,
                 "art": f"assets/creatures/{slug}/art.jpg" if has_art else None,
+                "anim": detect_anim(slug),
                 "holoUrl": meta.get("holoUrl")
                 or (
                     "https://mattamior.github.io/holo-card/all-in-one/#lv=5&focus=yinglong"

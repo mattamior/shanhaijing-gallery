@@ -153,6 +153,59 @@
     el.grid.appendChild(frag);
   }
 
+
+  let modalAnimTimer = 0;
+  function stopModalAnim() {
+    if (modalAnimTimer) {
+      cancelAnimationFrame(modalAnimTimer);
+      modalAnimTimer = 0;
+    }
+  }
+  function startModalAnim(imgOrEl, anim) {
+    stopModalAnim();
+    if (!anim || !(anim.frames > 0)) return;
+    const fps = Math.max(1, anim.fps || 8);
+    const interval = 1000 / fps;
+    let i = 0, last = 0;
+    if (anim.format === "sequence" && Array.isArray(anim.urls) && anim.urls.length) {
+      const urls = anim.urls;
+      imgOrEl.src = urls[0];
+      const tick = (t) => {
+        if (t - last >= interval) {
+          last = t;
+          i = (i + 1) % urls.length;
+          imgOrEl.src = urls[i];
+        }
+        modalAnimTimer = requestAnimationFrame(tick);
+      };
+      modalAnimTimer = requestAnimationFrame(tick);
+      return;
+    }
+    if (anim.format === "sheet" && anim.sheet) {
+      const cols = anim.cols || 1;
+      const rows = anim.rows || 1;
+      const n = anim.frames;
+      imgOrEl.style.backgroundImage = `url("${anim.sheet}")`;
+      imgOrEl.style.backgroundRepeat = "no-repeat";
+      imgOrEl.style.backgroundSize = `${cols * 100}% ${rows * 100}%`;
+      const paint = (idx) => {
+        const c = idx % cols;
+        const r = Math.floor(idx / cols) % rows;
+        imgOrEl.style.backgroundPosition = `${c * -100}% ${r * -100}%`;
+      };
+      paint(0);
+      const tick = (t) => {
+        if (t - last >= interval) {
+          last = t;
+          i = (i + 1) % n;
+          paint(i);
+        }
+        modalAnimTimer = requestAnimationFrame(tick);
+      };
+      modalAnimTimer = requestAnimationFrame(tick);
+    }
+  }
+
   function openDetail(slug, pushHash = true) {
     const c = bySlug.get(slug);
     if (!c) return;
@@ -173,12 +226,24 @@
       el.modalTags.appendChild(tag);
     }
 
+    stopModalAnim();
     el.modalArt.replaceChildren();
     if (c.art && c.status === "ready") {
-      const img = document.createElement("img");
-      img.src = c.art;
-      img.alt = c.name;
-      el.modalArt.appendChild(img);
+      const anim = c.anim && c.anim.frames > 0 ? c.anim : null;
+      if (anim && anim.format === "sheet" && anim.sheet) {
+        const sheet = document.createElement("div");
+        sheet.className = "modal__art-sheet";
+        sheet.setAttribute("role", "img");
+        sheet.setAttribute("aria-label", c.name);
+        el.modalArt.appendChild(sheet);
+        startModalAnim(sheet, anim);
+      } else {
+        const img = document.createElement("img");
+        img.src = c.art;
+        img.alt = c.name;
+        el.modalArt.appendChild(img);
+        if (anim && anim.format === "sequence") startModalAnim(img, anim);
+      }
     } else {
       const ph = document.createElement("div");
       ph.className = "placeholder";
@@ -205,6 +270,7 @@
   }
 
   function closeDetail(clearHash = true) {
+    stopModalAnim();
     el.modal.hidden = true;
     document.body.style.overflow = "";
     if (clearHash && location.hash.startsWith("#/")) {

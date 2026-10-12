@@ -24,6 +24,7 @@ python3 -m http.server 8766
 assets/creatures/<slug>/
   art.jpg          # 竖版 3:4 出图（建议 ≥768×1024）
   meta.json        # 可选：覆盖名称/出处/简介/状态
+  anim/            # 可选：L3 序列帧 f01.jpg… 或 sheet + meta.json
 data/creatures.json
 source/creatures.csv
 scripts/build_creatures.py
@@ -59,6 +60,28 @@ scripts/slug-map.json   # 构建时生成的 中文名→slug 表
 `/workspace/shanhaijing-gallery-assets/creatures/<slug>/{art.jpg,meta.json}`
 
 → 拷贝到本仓 `assets/creatures/<slug>/` 后重建 JSON。
+
+
+## 应龙 L3 序列帧（`anim/`）
+
+与 holo-card 共用投放目录：
+
+`/workspace/shanhaijing-gallery-assets/creatures/yinglong/anim/`
+
+```
+f01.jpg … fNN.jpg     # 或
+sheet.webp + meta.json
+meta.json 例：{"frames":12,"fps":8,"cols":4,"rows":3,"size":[960,540]}
+```
+
+同步进本仓并重建 JSON：
+
+```bash
+python3 /workspace/aio/sync-yinglong-anim.py
+python3 scripts/build_creatures.py   # 或 .venv/bin/python …
+```
+
+详情页若 `creatures.json` 含 `anim.frames > 0`，会自动循环播放；否则显示静帧 `art.jpg`。
 
 ## 筛选
 
