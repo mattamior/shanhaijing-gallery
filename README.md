@@ -116,3 +116,9 @@ python3 scripts/build_creatures.py   # 或 .venv/bin/python …
 ## 授权与引用
 
 经文内容公有领域；现代译注与本站代码按仓库惯例。卡面 CG 为项目原创资产。
+
+## Agnir Project Instructions
+
+This section is a **backward-compatible locator only**. Canonical Agnir activation and Project-operation instructions live in [`AGNIR.md`](./AGNIR.md). Do not duplicate or fork that procedure here.
+
+Fresh activation path: `AGENTS.md` → `AGNIR.md` → `AGNIR.yaml` → declared `.agnir/` memory.
