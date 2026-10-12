@@ -2790,26 +2790,7 @@
       "priority": "高",
       "status": "ready",
       "art": "assets/creatures/yinglong/art.jpg",
-      "anim": {
-        "format": "sequence",
-        "frames": 8,
-        "fps": 10,
-        "urls": [
-          "assets/creatures/yinglong/anim/f01.jpg",
-          "assets/creatures/yinglong/anim/f02.jpg",
-          "assets/creatures/yinglong/anim/f03.jpg",
-          "assets/creatures/yinglong/anim/f04.jpg",
-          "assets/creatures/yinglong/anim/f05.jpg",
-          "assets/creatures/yinglong/anim/f06.jpg",
-          "assets/creatures/yinglong/anim/f07.jpg",
-          "assets/creatures/yinglong/anim/f08.jpg"
-        ],
-        "size": [
-          768,
-          1024
-        ],
-        "status": null
-      },
+      "anim": null,
       "holoUrl": "https://mattamior.github.io/holo-card/all-in-one/#lv=5&focus=yinglong"
     },
     {

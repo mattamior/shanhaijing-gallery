@@ -93,6 +93,13 @@ def detect_anim(slug: str):
         except Exception as e:
             print(f"warn: bad anim meta {meta_path}: {e}", file=sys.stderr)
 
+    method = str(meta.get("method") or "").lower()
+    if method and ("region_warp" in method or "warp" in method):
+        print(f"warn: skip warp anim for {slug} (method={meta.get('method')})", file=sys.stderr)
+        return None
+    if str(meta.get("status") or "") == "awaiting-non-warp":
+        return None
+
     fps = int(meta.get("fps") or 8)
     raw_frames = meta.get("frames")
     if isinstance(raw_frames, list) and raw_frames:
