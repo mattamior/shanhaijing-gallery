@@ -1,6 +1,6 @@
 # Current State — shanhaijing-gallery
 
-Updated: 2026-10-12 (Asia/Shanghai)
+Updated: 2026-10-12 ~18:27 (Asia/Shanghai)
 
 ## Project
 《山海经》 creature gallery (dark cinematic static site). Live: https://mattamior.github.io/shanhaijing-gallery/
@@ -13,7 +13,7 @@ Updated: 2026-10-12 (Asia/Shanghai)
 - Yinglong card copy aligned to classics (see companion `/workspace/yinglong-card-copy.md` / gallery meta blurb).
 
 ## Withdrawn / pending redraw
-- **夔** (`kui`): withdrawn from ready catalog — user not finalizing art (feels ugly); seeking new references. `assets/creatures/kui/` kept (`art-4x3.jpg` + crop meta); `meta.status=pending`, note `withdrawn pending redraw`. `data/creatures.json` ready count = 1 (应龙 only).
+- **夔** (`kui`): still `pending` / withdrawn from ready catalog. **Identity lock set 2026-10-12**: Principal-approved Kai Mu twin sheet at `.agnir/evidence/2026-10-12-kui-approved-kaimu-lock.png` and `/workspace/shanhaijing-refs/kui/user-approved-kaimu-lock.png`. Redraw brief: match that twin look; mid-flank continuous flat foldable board-fin (shoulder→near tail), not a swollen ridge; no extra front/belly fins; no horns/hooves drift. Prior `assets/creatures/kui/` art retained on disk but must not be re-promoted until lock match. Ready count remains 1 (应龙 only).
 
 ## Related Projects
 - Holo preview: `mattamior/holo-card` `feature/all-in-one` (not bound as the gallery runtime).
