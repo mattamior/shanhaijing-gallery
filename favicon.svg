@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" rx="4" fill="#0a0b0e"/>
-  <rect x="8" y="3" width="16" height="26" rx="2.5" fill="#c9a45c"/>
-  <circle cx="16" cy="8" r="2.2" fill="#0a0b0e" opacity=".4"/>
-  <rect x="12" y="14" width="8" height="1.5" rx=".5" fill="#0a0b0e" opacity=".25"/>
-  <rect x="12" y="18" width="8" height="1.5" rx=".5" fill="#0a0b0e" opacity=".25"/>
+  <text x="16" y="23.5" text-anchor="middle"
+    font-family="Noto Serif CJK SC, Noto Sans CJK SC, PingFang SC, Microsoft YaHei, serif"
+    font-size="20" font-weight="700" fill="#c9a45c">山</text>
 </svg>
