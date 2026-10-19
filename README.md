@@ -19,7 +19,7 @@ python3 -m venv .venv && .venv/bin/pip install pypinyin
 python3 -m http.server 8766
 ```
 
-`check_site.py` 检查 slug 格式与唯一性、状态/优先级取值、`art` 与 `anim` 引用文件是否存在且非空、裁切参数范围，以及 `total` / `ready` 计数是否与实际一致；有错误时退出码为 1。
+`check_site.py` 检查 slug 格式与唯一性、状态/优先级取值、`art` 与 `anim` 引用文件是否存在且非空、裁切参数范围、名称非 BMP 字符是否被字体子集覆盖，以及 `total` / `ready` 计数是否与实际一致；有错误时退出码为 1。
 
 浏览器打开：http://localhost:8766
 
@@ -30,6 +30,7 @@ assets/creatures/<slug>/
   art.jpg          # 竖版 3:4 出图（建议 ≥768×1024）
   meta.json        # 可选：覆盖名称/出处/简介/状态
   anim/            # 可选：L3 序列帧 f01.jpg… 或 sheet + meta.json
+assets/fonts/      # 名称生僻字子集字体（见同目录 README）
 data/creatures.json
 source/creatures.csv
 scripts/build_creatures.py

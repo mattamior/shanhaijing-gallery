@@ -8,4 +8,5 @@ Updated: 2026-10-19 (Asia/Shanghai)
 4. Document/stabilize crop focus fields in meta if artists need non-center framing.
 5. Keep placeholders for pending beasts; do not invent lore text.
 6. Run `scripts/check_site.py` after every rebuild and before commit; keep README in sync with URL params / checks.
-7. On material changes: checkpoint evaluation → commit `main` → push → verify Pages.
+7. New non-BMP name glyphs: regenerate `assets/fonts/hanamin-b-rare.woff2` and its `unicode-range` (see `assets/fonts/README.md`); `check_site.py` fails until covered.
+8. On material changes: checkpoint evaluation → commit `main` → push → verify Pages.

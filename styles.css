@@ -16,9 +16,24 @@
   --radius: 14px;
   --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
   --font: "Noto Serif SC", "Songti SC", "Source Han Serif SC", "STSong",
-    "PingFang SC", "Hiragino Sans GB", serif;
+    "PingFang SC", "Hiragino Sans GB", "Shanhaijing Rare", serif;
   --font-ui: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", system-ui,
     -apple-system, sans-serif;
+}
+
+/* 仅含名称中的 7 个非 BMP 生僻字；见 assets/fonts/README.md */
+@font-face {
+  font-family: "Shanhaijing Rare";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/fonts/hanamin-b-rare.woff2") format("woff2");
+  unicode-range: U+2479E, U+247A4, U+2557F, U+29FE7, U+2A07A, U+2A0D1, U+2A100;
+}
+
+:where(a, button, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 *,
@@ -112,7 +127,7 @@ a:hover {
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-mute);
+  color: var(--text-dim);
 }
 
 .filters select,
@@ -144,7 +159,31 @@ a:hover {
   cursor: pointer;
 }
 .filters .check input {
-  accent-color: var(--accent);
+  appearance: none;
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: var(--bg-elev);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+.filters .check input::after {
+  content: "";
+  width: 8px;
+  height: 4px;
+  border-left: 2px solid #14100c;
+  border-bottom: 2px solid #14100c;
+  transform: rotate(-45deg) translateY(-1px) scale(0);
+}
+.filters .check input:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.filters .check input:checked::after {
+  transform: rotate(-45deg) translateY(-1px) scale(1);
 }
 
 .grid {
@@ -181,7 +220,10 @@ a:hover {
   transform: translateY(-3px);
   border-color: var(--border-strong);
   background: var(--bg-card-hover);
-  outline: none;
+}
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .card__art {
@@ -272,7 +314,7 @@ a:hover {
 .card__meta {
   margin: 0;
   font-size: 0.75rem;
-  color: var(--text-mute);
+  color: var(--text-dim);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -467,7 +509,7 @@ a:hover {
   margin-top: 40px;
   padding-top: 18px;
   border-top: 1px solid var(--border);
-  color: var(--text-mute);
+  color: var(--text-dim);
   font-size: 0.8rem;
   display: flex;
   flex-wrap: wrap;

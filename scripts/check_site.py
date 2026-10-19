@@ -16,7 +16,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "creatures.json"
+CSS = ROOT / "styles.css"
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+UNICODE_RANGE_RE = re.compile(r"unicode-range:\s*([^;]+);", re.IGNORECASE)
 STATUSES = {"ready", "pending"}
 PRIORITIES = {"高", "中", "低"}
 ASPECTS = {"4:3", "4/3"}
@@ -31,6 +33,26 @@ def fail(message: str) -> None:
 
 def note(message: str) -> None:
     warnings.append(message)
+
+
+def parse_unicode_ranges() -> set[int]:
+    """Codepoints declared by @font-face unicode-range rules in styles.css."""
+    if not CSS.is_file():
+        return set()
+    covered: set[int] = set()
+    for match in UNICODE_RANGE_RE.finditer(CSS.read_text(encoding="utf-8")):
+        for token in match.group(1).split(","):
+            token = token.strip().upper()
+            if token.startswith("U+"):
+                token = token[2:]
+            if not token:
+                continue
+            if "-" in token:
+                low, high = token.split("-", 1)
+                covered.update(range(int(low, 16), int(high, 16) + 1))
+            else:
+                covered.add(int(token, 16))
+    return covered
 
 
 def resolve(rel_path: str, label: str) -> Path | None:
@@ -190,6 +212,20 @@ def main() -> int:
         anim = creature.get("anim")
         if anim is not None:
             anim_count += check_anim(slug, anim, f"{label}.anim")
+
+    rare = {
+        ord(ch)
+        for creature in creatures
+        if isinstance(creature, dict) and isinstance(creature.get("name"), str)
+        for ch in creature["name"]
+        if ord(ch) > 0xFFFF
+    }
+    covered = parse_unicode_ranges()
+    for cp in sorted(rare - covered):
+        fail(
+            f"non-BMP name glyph U+{cp:05X} ({chr(cp)}) is not covered by "
+            "@font-face unicode-range in styles.css; regenerate assets/fonts/hanamin-b-rare.woff2"
+        )
 
     total = data.get("total")
     if total != len(creatures):
