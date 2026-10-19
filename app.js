@@ -43,6 +43,7 @@
 
   let all = [];
   let bySlug = new Map();
+  let lastFocused = null;
 
   function primaryVolume(volume) {
     return String(volume || "").split(/\s*\/\s*/)[0].trim();
@@ -63,6 +64,39 @@
       opt.textContent = v;
       el.volume.appendChild(opt);
     }
+  }
+
+  /** 筛选状态以 URL 查询参数为准，便于分享/收藏（详情仍用 hash）。 */
+  function readFiltersFromUrl() {
+    const params = new URLSearchParams(location.search);
+    const vol = params.get("volume") || "";
+    const hasVol = [...el.volume.options].some((o) => o.value === vol);
+    el.volume.value = hasVol ? vol : "";
+    const pri = params.get("priority") || "";
+    el.priority.value = ["高", "中", "低"].includes(pri) ? pri : "";
+    el.readyOnly.checked = params.get("ready") === "1";
+    el.search.value = params.get("q") || "";
+  }
+
+  let syncUrlTimer = 0;
+  function syncUrl() {
+    clearTimeout(syncUrlTimer);
+    syncUrlTimer = 0;
+    const params = new URLSearchParams(location.search);
+    const put = (key, value) => (value ? params.set(key, value) : params.delete(key));
+    put("volume", el.volume.value);
+    put("priority", el.priority.value);
+    put("ready", el.readyOnly.checked ? "1" : "");
+    put("q", el.search.value.trim());
+    const qs = params.toString();
+    const next = location.pathname + (qs ? `?${qs}` : "") + location.hash;
+    if (next !== location.pathname + location.search + location.hash) {
+      history.replaceState(history.state, "", next);
+    }
+  }
+  function scheduleSyncUrl() {
+    clearTimeout(syncUrlTimer);
+    syncUrlTimer = window.setTimeout(syncUrl, 150);
   }
 
   function filtered() {
@@ -229,6 +263,7 @@
     const c = bySlug.get(slug);
     if (!c) return;
 
+    if (el.modal.hidden) lastFocused = document.activeElement;
     el.modalName.textContent = c.name;
     el.modalSource.textContent = c.source || `《山海经·${c.volume}》`;
     el.modalBlurb.textContent = c.blurb || "";
@@ -290,12 +325,15 @@
   }
 
   function closeDetail(clearHash = true) {
+    const wasOpen = !el.modal.hidden;
     stopModalAnim();
     el.modal.hidden = true;
     document.body.style.overflow = "";
     if (clearHash && location.hash.startsWith("#/")) {
       history.pushState({}, "", location.pathname + location.search);
     }
+    if (wasOpen && lastFocused && document.contains(lastFocused)) lastFocused.focus();
+    lastFocused = null;
   }
 
   function routeFromHash() {
@@ -309,13 +347,39 @@
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !el.modal.hidden) closeDetail(true);
   });
+  function trapModalFocus(e) {
+    if (e.key !== "Tab" || el.modal.hidden) return;
+    const focusables = [
+      ...el.modal.querySelectorAll(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      ),
+    ].filter((node) => node.getClientRects().length > 0);
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement;
+    if (e.shiftKey && (active === first || !el.modal.contains(active))) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && (active === last || !el.modal.contains(active))) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+  el.modal.addEventListener("keydown", trapModalFocus);
   window.addEventListener("popstate", routeFromHash);
   window.addEventListener("hashchange", routeFromHash);
 
-  for (const node of [el.volume, el.priority, el.readyOnly, el.search]) {
-    node.addEventListener("input", render);
-    node.addEventListener("change", render);
+  for (const node of [el.volume, el.priority, el.readyOnly]) {
+    node.addEventListener("change", () => {
+      render();
+      syncUrl();
+    });
   }
+  el.search.addEventListener("input", () => {
+    render();
+    scheduleSyncUrl();
+  });
 
   fetch("data/creatures.json")
     .then((r) => {
@@ -328,6 +392,7 @@
       el.statsReady.textContent = String(data.ready ?? all.filter((c) => c.status === "ready").length);
       el.statsTotal.textContent = String(data.total ?? all.length);
       fillVolumeOptions(all);
+      readFiltersFromUrl();
       render();
       routeFromHash();
     })

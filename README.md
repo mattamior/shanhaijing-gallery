@@ -13,8 +13,13 @@
 python3 -m venv .venv && .venv/bin/pip install pypinyin
 .venv/bin/python scripts/build_creatures.py
 
+# 校验 JSON 与 assets 引用一致（提交前跑）
+.venv/bin/python scripts/check_site.py
+
 python3 -m http.server 8766
 ```
+
+`check_site.py` 检查 slug 格式与唯一性、状态/优先级取值、`art` 与 `anim` 引用文件是否存在且非空、裁切参数范围，以及 `total` / `ready` 计数是否与实际一致；有错误时退出码为 1。
 
 浏览器打开：http://localhost:8766
 
@@ -28,6 +33,7 @@ assets/creatures/<slug>/
 data/creatures.json
 source/creatures.csv
 scripts/build_creatures.py
+scripts/check_site.py   # 提交前校验 JSON ↔ assets 引用
 scripts/slug-map.json   # 构建时生成的 中文名→slug 表
 ```
 
@@ -111,7 +117,18 @@ python3 scripts/build_creatures.py   # 或 .venv/bin/python …
 - 仅已出图
 - 名称 / 出处搜索
 
-详情可用 hash：`#/yinglong`。
+筛选状态写入 URL 查询参数，可直接分享或收藏：
+
+```
+?volume=大荒东经&priority=高&ready=1&q=应龙
+```
+
+- `volume`：主篇目精确匹配
+- `priority`：`高` / `中` / `低`
+- `ready=1`：仅已出图
+- `q`：名称 / 出处 / 简介关键词
+
+详情用 hash：`#/yinglong`，可与筛选参数叠加；弹窗支持 Esc 关闭，关闭后焦点回到原卡片。
 
 ## 授权与引用
 
