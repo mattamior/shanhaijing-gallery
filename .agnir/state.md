@@ -1,6 +1,6 @@
 # Current State — shanhaijing-gallery
 
-Updated: 2026-10-19 (Asia/Shanghai)
+Updated: 2026-10-20 (Asia/Shanghai)
 
 ## Project
 《山海经》 creature gallery (dark cinematic static site). Live: https://mattamior.github.io/shanhaijing-gallery/
@@ -19,7 +19,7 @@ Updated: 2026-10-19 (Asia/Shanghai)
 - Dark-theme controls: custom checkbox, accent `:focus-visible` rings on cards/buttons/inputs, brighter card meta / filter labels / footer for contrast.
 
 ## Withdrawn / pending redraw
-- **夔** (`kui`): still `pending` / withdrawn from ready catalog. **Identity lock set 2026-10-12**: Principal-approved Kai Mu twin sheet at `.agnir/evidence/2026-10-12-kui-approved-kaimu-lock.png` and `/workspace/shanhaijing-refs/kui/user-approved-kaimu-lock.png`. Redraw brief: match that twin look; mid-flank continuous flat foldable board-fin (shoulder→near tail), not a swollen ridge; no extra front/belly fins; no horns/hooves drift. Prior `assets/creatures/kui/` art retained on disk but must not be re-promoted until lock match. Ready count remains 1 (应龙 only).
+- **夔** (`kui`): still `pending` / withdrawn from ready catalog. **Identity lock set 2026-10-12**: Principal-approved Kai Mu twin sheet at `.agnir/evidence/2026-10-12-kui-approved-kaimu-lock.png` and `/workspace/shanhaijing-refs/kui/user-approved-kaimu-lock.png`. Redraw brief: match that twin look; mid-flank continuous flat foldable board-fin (shoulder→near tail), not a swollen ridge; no extra front/belly fins; no horns/hooves drift. Prior `assets/creatures/kui/` art retained on disk but must not be re-promoted until lock match. Ready count remains 1 (应龙 only). Local image generation is ruled out (Decisions 2026-10-20): no available local model both fits this 24GB Mac and runs under mflux; redraw needs an external image API or artist.
 
 ## Related Projects
 - Holo preview: `mattamior/holo-card` `feature/all-in-one` (not bound as the gallery runtime).
