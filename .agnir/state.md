@@ -9,6 +9,7 @@ Updated: 2026-10-20 (Asia/Shanghai)
 - Catalog ~198 entries from `source/creatures.csv` → `data/creatures.json` via `scripts/build_creatures.py`.
 - Grid + detail hash routes (e.g. `#/yinglong`); ungenerated entries gray placeholder.
 - **应龙** ready: `assets/creatures/yinglong/{art.jpg,meta.json,anim/}` with L3 loop @10fps when `anim.frames > 0`.
+- **夔** ready (2026-10-20): `assets/creatures/kui/art-4x3.jpg` (4:3 mother, 1448×1086, AI-assisted redraw approved by Principal). Identity lock v2: bovine short blunt muzzle, no horns, 苍身 cold blue-grey, **one fin-shaped foot** (《大荒东经》「一足」), spiral curled tail, one continuous flat fringed dorsal fin neck→tail base, one pair of pectoral fin-fans, no hooves. Old twin-sheet lock kept as evidence at `.agnir/evidence/2026-10-12-kui-approved-kaimu-lock.png`.
 - Art pipeline: 美术专家 delivers **landscape 4:3 mother** `art.jpg`; site crops **3:4** for grid/card using center or meta focus (`cropCenterX` / related fields as agreed).
 - Yinglong card copy aligned to classics (see companion `/workspace/yinglong-card-copy.md` / gallery meta blurb).
 - Shareable filter state: `?volume=&priority=&ready=1&q=`, composed with the detail hash; filter changes use `replaceState`.
@@ -18,8 +19,8 @@ Updated: 2026-10-20 (Asia/Shanghai)
 - Rare name glyphs: self-hosted HanaMinB subset `assets/fonts/hanamin-b-rare.woff2` (7 non-BMP chars, `unicode-range` fallback, OFL/Hanazono license included).
 - Dark-theme controls: custom checkbox, accent `:focus-visible` rings on cards/buttons/inputs, brighter card meta / filter labels / footer for contrast.
 
-## Withdrawn / pending redraw
-- **夔** (`kui`): still `pending` / withdrawn from ready catalog. **Identity lock set 2026-10-12**: Principal-approved Kai Mu twin sheet at `.agnir/evidence/2026-10-12-kui-approved-kaimu-lock.png` and `/workspace/shanhaijing-refs/kui/user-approved-kaimu-lock.png`. Redraw brief: match that twin look; mid-flank continuous flat foldable board-fin (shoulder→near tail), not a swollen ridge; no extra front/belly fins; no horns/hooves drift. Prior `assets/creatures/kui/` art retained on disk but must not be re-promoted until lock match. Ready count remains 1 (应龙 only). Local image generation is ruled out (Decisions 2026-10-20): no available local model both fits this 24GB Mac and runs under mflux; redraw needs an external image API or artist.
+## Constraints
+- Local image generation is ruled out (Decisions 2026-10-20): no available local model both fits this 24GB Mac and runs under mflux; new art must come from an external image API or a human artist.
 
 ## Related Projects
 - Holo preview: `mattamior/holo-card` `feature/all-in-one` (not bound as the gallery runtime).
