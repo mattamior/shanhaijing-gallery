@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-20T07:32:06Z",
+  "generatedAt": "2026-10-21T01:45:37Z",
   "total": 198,
-  "ready": 2,
+  "ready": 3,
   "creatures": [
     {
       "slug": "zhizhi",
@@ -14,10 +14,16 @@
       "ability": "食之无卧",
       "artKeywords": "三首鸡、六目六足三翼",
       "priority": "高",
-      "status": "pending",
-      "art": null,
+      "status": "ready",
+      "art": "assets/creatures/zhizhi/art-4x3.jpg",
       "anim": null,
-      "holoUrl": null
+      "holoUrl": null,
+      "aspect": "4:3",
+      "crop": {
+        "focusX": 0.5,
+        "focusY": 0.45,
+        "zoom": 1.05
+      }
     },
     {
       "slug": "jiuweihu",

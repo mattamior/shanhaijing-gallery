@@ -1,0 +1,11 @@
+{
+  "name": "䳋䳅（𪁺𩿧）",
+  "status": "ready",
+  "art": "art-4x3.jpg",
+  "aspect": "4:3",
+  "crop": {
+    "focusX": 0.5,
+    "focusY": 0.45,
+    "zoom": 1.05
+  }
+}
